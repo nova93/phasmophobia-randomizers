@@ -61,6 +61,7 @@ export default () => {
           onPress={isDisabled ? () => null : handleRandomizePress}
           isHoverable={true}
           isDisabled={isDisabled}
+          disableRipple={true}
         >
           <CardHeader>
             <h1 className="text-center w-full font-semibold text-large">
