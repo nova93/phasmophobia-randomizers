@@ -54,6 +54,7 @@ export default () => {
     setLoaderValue(0);
     setIsDisabled(false);
   };
+
   return (
     <>
       <Head>
