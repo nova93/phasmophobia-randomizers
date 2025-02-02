@@ -15,7 +15,7 @@ export default () => {
           <Link href="/ghost">Ghost</Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/map">Map</Link>
+          <Link href="/location">Location</Link>
         </NavbarItem>
       </NavbarContent>
     </Navbar>

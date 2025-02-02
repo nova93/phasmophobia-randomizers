@@ -53,8 +53,11 @@ export default () => {
   return (
     <>
       <Head>
-        <title>Map - Phasmophobia Randomizers</title>
-        <meta name="description" content="Randomize your Phasmophobia Maps" />
+        <title>Location - Phasmophobia Randomizers</title>
+        <meta
+          name="description"
+          content="Randomize your Phasmophobia Locations"
+        />
       </Head>
       <div className="flex items-center py-12 flex-col gap-10 px-8">
         <Accordion isCompact={true} variant="shadow" className="max-w-[550px]">
