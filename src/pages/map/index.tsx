@@ -1,6 +1,8 @@
+import { dateOptions } from "@/config/date";
 import locations from "@/config/locations";
 import { randomValueFromArray } from "@/utils/random";
 import slowNumberIncrease from "@/utils/slowNumberIncrease";
+import useLocalStorage from "@/utils/useLocalStorage";
 import {
   Accordion,
   AccordionItem,
@@ -27,20 +29,11 @@ type Audit = {
   date: Date;
 };
 
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "numeric",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-  second: "numeric",
-  hour12: false,
-};
-
 export default () => {
   const [pickedLocation, setPickedLocation] = useState<string>();
   const [loaderValue, setLoaderValue] = useState(0);
-  const [audit, setAudit] = useState<Audit[]>([]);
+  const { value: audit, setValue: setAudit } =
+    useLocalStorage<Audit[]>("mapAudit");
   const [isDisabled, setIsDisabled] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState<string[]>(
     locations.map((i) => i.name),
@@ -51,11 +44,12 @@ export default () => {
     await slowNumberIncrease(setLoaderValue);
     const location = randomValueFromArray(selectedLocations);
     setPickedLocation(location);
-    setAudit([...audit, { location, date: new Date() }]);
+    setAudit([...(audit ? audit : []), { location, date: new Date() }]);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setLoaderValue(0);
     setIsDisabled(false);
   };
+
   return (
     <>
       <Head>
@@ -133,7 +127,7 @@ export default () => {
           </Chip>
         )}
 
-        {audit.length > 0 && (
+        {audit && audit.length > 0 && (
           <Table aria-label="Previous rolls">
             <TableHeader>
               <TableColumn>Location</TableColumn>
@@ -141,11 +135,11 @@ export default () => {
             </TableHeader>
             <TableBody>
               {audit.toReversed().map((item) => (
-                <TableRow key={item.date.toString()}>
+                <TableRow key={new Date(item.date).toString()}>
                   <TableCell>{item.location}</TableCell>
                   <TableCell>
                     {new Intl.DateTimeFormat(undefined, dateOptions).format(
-                      item.date,
+                      new Date(item.date),
                     )}
                   </TableCell>
                 </TableRow>
