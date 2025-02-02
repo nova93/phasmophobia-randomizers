@@ -2,9 +2,13 @@ import ghosts from "@/config/ghosts";
 import { randomValueFromArray } from "@/utils/random";
 import slowNumberIncrease from "@/utils/slowNumberIncrease";
 import {
+  Accordion,
+  AccordionItem,
   Card,
   CardBody,
   CardHeader,
+  Checkbox,
+  CheckboxGroup,
   Chip,
   CircularProgress,
   Table,
@@ -13,6 +17,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  cn,
 } from "@heroui/react";
 import Head from "next/head";
 import { useState } from "react";
@@ -37,11 +42,12 @@ export default () => {
   const [loaderValue, setLoaderValue] = useState(0);
   const [audit, setAudit] = useState<Audit[]>([]);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [selectedGhosts, setSelectedGhosts] = useState<string[]>(ghosts);
 
   const handleRandomizePress = async () => {
     setIsDisabled(true);
     await slowNumberIncrease(setLoaderValue);
-    const ghost = randomValueFromArray(ghosts);
+    const ghost = randomValueFromArray(selectedGhosts);
     setPickedGhost(ghost);
     setAudit([...audit, { ghost, date: new Date() }]);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -54,7 +60,33 @@ export default () => {
         <title>Ghost - Phasmophobia Randomizers</title>
         <meta name="description" content="Randomize your Phasmophobia Ghosts" />
       </Head>
-      <div className="flex items-center py-12 flex-col gap-10">
+      <div className="flex items-center py-12 flex-col gap-10 px-8">
+        <Accordion isCompact={true} variant="shadow" className="max-w-[450px]">
+          <AccordionItem
+            key="1"
+            aria-label="Select available ghosts"
+            title="Select available ghosts"
+          >
+            <CheckboxGroup
+              defaultValue={ghosts}
+              value={selectedGhosts}
+              onValueChange={setSelectedGhosts}
+              orientation="vertical"
+              classNames={{
+                wrapper: cn(
+                  "grid grid-cols-[repeat(auto-fit,_minmax(120px,_1fr))]",
+                ),
+                base: cn("p-2"),
+              }}
+            >
+              {ghosts.map((ghost) => (
+                <Checkbox value={ghost} key={ghost}>
+                  {ghost}
+                </Checkbox>
+              ))}
+            </CheckboxGroup>
+          </AccordionItem>
+        </Accordion>
         <Card
           className="w-[240px] h-[240px] border-none bg-gradient-to-br from-violet-500 to-fuchsia-500"
           isPressable={!isDisabled}
@@ -65,7 +97,7 @@ export default () => {
         >
           <CardHeader>
             <h1 className="text-center w-full font-semibold text-large">
-              Press to randomize ghost!
+              Press to pick a random ghost!
             </h1>
           </CardHeader>
           <CardBody className="justify-center items-center pb-0">
@@ -97,7 +129,7 @@ export default () => {
         )}
 
         {audit.length > 0 && (
-          <Table aria-label="Previous rolls" className="px-8">
+          <Table aria-label="Previous rolls">
             <TableHeader>
               <TableColumn>Ghost</TableColumn>
               <TableColumn>Date</TableColumn>
