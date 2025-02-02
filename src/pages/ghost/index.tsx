@@ -111,6 +111,7 @@ export default () => {
               showValueLabel={true}
               strokeWidth={4}
               value={loaderValue}
+              aria-label="Fake randomization progress"
             />
           </CardBody>
         </Card>
