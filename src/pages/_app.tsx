@@ -8,7 +8,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <meta name="viewport" content="viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width" />
       </Head>
       <HeroUIProvider>
         <div className="dark text-foreground bg-background min-h-full">
